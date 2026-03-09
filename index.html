@@ -367,7 +367,7 @@ const FUENTES=[
 ];
 const ST={nuevo:['bb','Nuevo'],consulta:['by','Consulta'],firme:['bg','Firme'],derogado:['bgr','Derogado']};
 const TL={impuestos:'Impuestos',facturacion:'Facturacion',factoring:'Factoring',contable:'Contable'};
-let data=[],cpais='all',ctema='all';
+let data=[],cpais='all',ctema='all';try{const _s=localStorage.getItem('rw_lastScan');if(_s){const _p=JSON.parse(_s);data=_p.data||[];}}catch(e){}
 let apiKey=localStorage.getItem('rw_k')||'';
 let mdl=localStorage.getItem('rw_m')||'claude-sonnet-4-6';
 
@@ -427,6 +427,7 @@ Minimo 2 items por pais. Basa CADA item en busqueda web real con fechas y numero
     const m=textBlocks.match(/\{[\s\S]*\}/);
     if(!m)throw new Error('Sin JSON en respuesta');
     data=JSON.parse(m[0]).items;
+    try{localStorage.setItem('rw_lastScan',JSON.stringify({data,fecha:new Date().toISOString()}));}catch(e){}
     finalizarScan(tk,true);
   }catch(e){
     clearInterval(tk);
