@@ -419,7 +419,7 @@ Minimo 2 items por pais. Basa CADA item en busqueda web real con fechas y numero
     const resp=await fetch('/api/proxy',{
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01'},
-      body:JSON.stringify({model:mdl||'claude-sonnet-4-6',max_tokens:8000,tools:[{type:'web_search_20250305',name:'web_search'}],messages:[{role:'user',content:prompt}]})
+      body:JSON.stringify({model:mdl||'claude-sonnet-4-6',max_tokens:8000,messages:[{role:'user',content:prompt}]})
     });
     if(!resp.ok){const e=await resp.json().catch(()=>({}));throw new Error(e?.error?.message||'HTTP '+resp.status);}
     const apiData=await resp.json();
