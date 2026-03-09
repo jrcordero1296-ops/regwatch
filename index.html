@@ -397,23 +397,13 @@ async function scan(){
   let sk='';for(let i=0;i<7;i++)sk+=`<div class="skrow"><div class="sk" style="width:42px;height:42px;border-radius:8px;flex-shrink:0"></div><div style="flex:1;display:flex;flex-direction:column;gap:.38rem"><div class="sk" style="height:9px;width:64%"></div><div class="sk" style="height:9px;width:88%"></div><div class="sk" style="height:9px;width:46%"></div></div></div>`;
   document.getElementById('res-list').innerHTML=sk;
   const hoy=new Date().toLocaleDateString('es-CR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  const prompt=`Hoy es ${hoy}. Eres un monitor regulatorio especializado. USA LA HERRAMIENTA DE BUSQUEDA WEB para buscar las noticias regulatorias MAS RECIENTES Y REALES de estas fuentes:
+  const prompt=`Hoy es ${hoy}. Busca actualizaciones regulatorias de facturacion electronica e impuestos 2025-2026 para estos 8 paises y entidades: Colombia(DIAN), Costa Rica(Hacienda), Mexico(SAT), Republica Dominicana(DGII), Panama(DGI), Argentina(AFIP/ARCA), Peru(SUNAT), Espana(AEAT/Verifactu).
 
-COLOMBIA: dian.gov.co - resoluciones, proyectos normas, comunicados 2025
-COSTA RICA: hacienda.go.cr - comprobantes electronicos v4.4, TRIBU-CR, IVA 2025
-MEXICO: sat.gob.mx - CFDI 4.0, RMF 2025-2026, reforma fiscal
-REPUBLICA DOMINICANA: dgii.gov.do - e-CF comprobantes electronicos 2025
-PANAMA: dgi.mef.gob.pa - normativa tributaria 2025
-ARGENTINA: afip.gob.ar o ARCA - facturacion electronica RG 2025
-PERU: sunat.gob.pe - SIRE registros electronicos 2025
-ESPANA: agenciatributaria.gob.es - Verifactu factura electronica B2B 2025
+IMPORTANTE: Responde UNICAMENTE con el JSON, sin texto antes ni despues, sin markdown, sin bloques de codigo. Solo el JSON puro.
 
-Busca: "DIAN resolucion 2025", "SAT CFDI RMF 2026", "factura electronica Costa Rica 2025", "DGII e-CF novedades 2025", "SUNAT SIRE 2025", "ARCA facturacion Argentina 2025", "AEAT Verifactu 2025"
+{"items":[{"id":"1","country":"CO","title":"titulo corto","summary":"resumen con fecha y detalles","topic":"impuestos","status":"nuevo","urgency":"alta","entity":"DIAN","date":"2025-03","ref":"Res.001-2025","source_url":"https://dian.gov.co"}]}
 
-Responde SOLO JSON valido sin texto ni markdown:
-{"items":[{"id":"1","country":"CO","title":"titulo real","summary":"resumen con fecha y detalles concretos encontrados","topic":"impuestos|facturacion|factoring|contable","status":"nuevo|consulta|firme","urgency":"alta|media|baja","entity":"entidad real","date":"fecha real","ref":"resolucion real","source_url":"URL oficial real"}]}
-
-Minimo 2 items por pais. Basa CADA item en busqueda web real con fechas y numeros de resolucion reales.`;
+Minimo 1 item por pais. country debe ser: CO, CR, MX, DO, PA, AR, PE, ES.`
 
   try{
     const resp=await fetch('https://regwatch-proxy.j-rcordero1296.workers.dev',{
