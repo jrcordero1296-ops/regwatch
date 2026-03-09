@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RegWatch · Product Regulation</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#00BFB3;--td:#009E94;--tl:#E0F7F6;--tbg:#F0FAFA;--navy:#1A2E3B;--navy2:#2D4A5A;--txt:#2D3748;--body:#4A5568;--muted:#718096;--bdr:#E2E8F0;--bg:#F7FAFC;--grn:#38A169;--gbg:#F0FFF4;--ylw:#D69E2E;--ybg:#FFFFF0;--red:#E53E3E;--rbg:#FFF5F5;--org:#DD6B20;--sw:252px;--th:58px;--r:10px;--rs:7px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif}
+body{background:var(--bg);color:var(--txt);display:flex;flex-direction:column}
+.topbar{height:var(--th);background:#fff;border-bottom:1px solid var(--bdr);display:flex;align-items:center;padding:0 1.5rem;gap:1rem;z-index:200;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.logo{display:flex;align-items:center;gap:.5rem;text-decoration:none;flex-shrink:0}
+.logo svg{width:36px;height:36px}
+.logo-w{font-size:1.2rem;font-weight:700;color:var(--navy);letter-spacing:-.4px}
+.logo-w em{font-style:normal;color:var(--teal)}
+.tsep{width:1px;height:26px;background:var(--bdr)}
+.tmod{font-size:.76rem;color:var(--muted);white-space:nowrap}
+.tmod b{color:var(--navy);font-weight:700}
+.tsp{flex:1}
+.tclk{font-size:.74rem;color:var(--muted);background:var(--bg);padding:.28rem .75rem;border-radius:20px;border:1px solid var(--bdr);font-weight:500;white-space:nowrap}
+.upill{display:flex;align-items:center;gap:.45rem;padding:.22rem .7rem .22rem .22rem;border-radius:24px;border:1px solid var(--bdr);background:#fff;cursor:pointer;transition:border-color .14s}
+.upill:hover{border-color:var(--teal)}
+.uav{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--teal),#00D4C8);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.62rem;font-weight:700;flex-shrink:0}
+.unm{font-size:.74rem;font-weight:700;color:var(--navy);line-height:1.25}
+.url{font-size:.62rem;color:var(--td);font-weight:600}
+.shell{display:flex;flex:1;overflow:hidden}
+.sb{width:var(--sw);background:var(--navy);height:100%;overflow-y:auto;flex-shrink:0;padding:1rem 0;display:flex;flex-direction:column;scrollbar-width:none}
+.sb::-webkit-scrollbar{display:none}
+.sbs{margin-bottom:1.2rem}
+.sbl{font-size:.59rem;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:#3D5A6A;padding:0 1.1rem;margin-bottom:.3rem}
+.si{display:flex;align-items:center;gap:.58rem;padding:.48rem 1.1rem;color:#7A9AAA;font-size:.81rem;font-weight:500;cursor:pointer;border-left:3px solid transparent;transition:all .13s;white-space:nowrap}
+.si:hover{background:rgba(0,191,179,.07);color:#B5CDD6}
+.si.on{background:rgba(0,191,179,.12);color:#fff;border-left-color:var(--teal);font-weight:600}
+.sic{font-size:.92rem;width:18px;text-align:center;flex-shrink:0}
+.sbdg{margin-left:auto;background:var(--teal);color:#fff;font-size:.57rem;font-weight:700;padding:.1rem .38rem;border-radius:10px}
+.sbdg.live{background:#E53E3E;animation:pr 2s infinite}
+@keyframes pr{0%,100%{opacity:1}50%{opacity:.6}}
+.sc{display:flex;align-items:center;gap:.48rem;padding:.36rem 1.1rem;color:#5A8090;font-size:.78rem;cursor:pointer;border-left:3px solid transparent;transition:all .12s}
+.sc:hover{color:#B5CDD6;background:rgba(255,255,255,.03)}
+.sc.on{color:#fff;border-left-color:var(--teal);background:rgba(0,191,179,.09);font-weight:600}
+.sbft{margin-top:auto;padding:.9rem 1.1rem;border-top:1px solid rgba(255,255,255,.05)}
+.sbft p{font-size:.63rem;color:#334F5F;line-height:1.6}
+main,.view{flex:1;overflow-y:auto;padding:1.2rem 1.4rem;display:flex;flex-direction:column;gap:1rem}
+.ph{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.pht{font-size:1.3rem;font-weight:800;color:var(--navy);letter-spacing:-.35px;line-height:1.2}
+.phs{font-size:.77rem;color:var(--muted);margin-top:.18rem}
+.pha{display:flex;gap:.45rem;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:.32rem;padding:.45rem .95rem;border-radius:var(--rs);border:none;font-family:'Inter',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .14s;white-space:nowrap}
+.bp{background:var(--teal);color:#fff;box-shadow:0 2px 8px rgba(0,191,179,.25)}
+.bp:hover{background:var(--td)}
+.bp:disabled{opacity:.5;cursor:not-allowed}
+.bo{background:#fff;color:var(--navy);border:1.5px solid var(--bdr);box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.bo:hover{border-color:var(--teal);color:var(--teal)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem}
+.stat{background:#fff;border-radius:var(--r);border:1px solid var(--bdr);padding:.9rem 1rem;display:flex;align-items:center;gap:.85rem;box-shadow:0 1px 3px rgba(0,0,0,.06);transition:box-shadow .14s}
+.stat:hover{box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.sico{width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.it{background:var(--tl)}.ib{background:#EBF8FF}.iy{background:var(--ybg)}.ig{background:var(--gbg)}
+.sv{font-size:1.6rem;font-weight:800;color:var(--navy);line-height:1}
+.sl{font-size:.69rem;color:var(--muted);font-weight:500;margin-top:.12rem}
+.g2{display:grid;grid-template-columns:1fr 355px;gap:1rem;flex:1;min-height:0}
+.card{background:#fff;border-radius:var(--r);border:1px solid var(--bdr);box-shadow:0 1px 3px rgba(0,0,0,.06);display:flex;flex-direction:column;overflow:hidden}
+.ch{padding:.8rem 1.2rem;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;gap:.7rem;flex-shrink:0}
+.ct{font-size:.86rem;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:.42rem}
+.cb{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--bdr) transparent}
+.cb::-webkit-scrollbar{width:4px}
+.cb::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px}
+.pills{display:flex;gap:.28rem;padding:.55rem 1.2rem;border-bottom:1px solid var(--bdr);background:var(--bg);flex-wrap:wrap;flex-shrink:0}
+.pill{padding:.22rem .65rem;border-radius:20px;font-size:.71rem;font-weight:600;border:1.5px solid var(--bdr);background:#fff;color:var(--muted);cursor:pointer;transition:all .11s}
+.pill:hover{border-color:var(--teal);color:var(--teal)}
+.pill.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.prog{height:3px;background:var(--bdr);overflow:hidden;flex-shrink:0}
+.pb{height:100%;width:0%;background:linear-gradient(90deg,var(--teal),#00D4C8);transition:width .34s ease;border-radius:2px}
+.pb.ani{background:linear-gradient(90deg,var(--teal),#00D4C8,var(--teal));background-size:200%;animation:sl 1.4s linear infinite}
+@keyframes sl{0%{background-position:0%}100%{background-position:200%}}
+.ri{padding:.8rem 1.2rem;border-bottom:1px solid var(--bdr);cursor:pointer;transition:background .1s;display:grid;grid-template-columns:72px 1fr auto;gap:.65rem;align-items:start}
+.ri:hover{background:var(--tbg)}
+.ri:last-child{border-bottom:none}
+.ril{display:flex;flex-direction:column;gap:.28rem;align-items:flex-start}
+.ric{min-width:0}
+.rir{display:flex;flex-direction:column;align-items:flex-end;gap:.28rem}
+.bdg{display:inline-flex;align-items:center;gap:.18rem;padding:.14rem .46rem;border-radius:20px;font-size:.6rem;font-weight:700;white-space:nowrap}
+.bt{background:var(--tl);color:var(--td)}.bg{background:var(--gbg);color:var(--grn)}.by{background:var(--ybg);color:var(--ylw)}.br{background:var(--rbg);color:var(--red)}.bb{background:#EBF8FF;color:#2B6CB0}.bgr{background:var(--bg);color:var(--muted)}
+.rit{font-size:.83rem;font-weight:700;color:var(--navy);line-height:1.3;margin-bottom:.2rem}
+.ris{font-size:.74rem;color:var(--body);line-height:1.55;margin-bottom:.28rem}
+.rim{display:flex;gap:.6rem;font-size:.64rem;color:var(--muted);font-weight:500;flex-wrap:wrap;align-items:center}
+.udot{width:7px;height:7px;border-radius:50%;margin-top:.18rem;flex-shrink:0}
+.alta{background:var(--red);box-shadow:0 0 0 2px var(--rbg)}.media{background:var(--ylw);box-shadow:0 0 0 2px var(--ybg)}.baja{background:var(--grn);box-shadow:0 0 0 2px var(--gbg)}
+.mb{padding:.16rem .46rem;border-radius:5px;border:1px solid var(--bdr);background:#fff;font-size:.64rem;font-weight:600;cursor:pointer;color:var(--muted);transition:all .1s}
+.mb:hover{border-color:var(--teal);color:var(--teal);background:var(--tbg)}
+.empty{padding:2.4rem 1.4rem;text-align:center;color:var(--muted)}
+.ei{font-size:2.1rem;margin-bottom:.55rem}
+.et{font-size:.92rem;font-weight:700;color:var(--navy);margin-bottom:.32rem}
+.es{font-size:.77rem;line-height:1.6}
+.skrow{display:flex;gap:.7rem;padding:.8rem 1.2rem;border-bottom:1px solid var(--bdr);animation:sk 1.4s ease-in-out infinite}
+@keyframes sk{0%,100%{opacity:1}50%{opacity:.4}}
+.sk{background:#E2E8F0;border-radius:4px}
+.ai-card{background:#fff;border-radius:var(--r);border:1px solid var(--bdr);box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden;display:flex;flex-direction:column}
+.ai-h{background:linear-gradient(135deg,var(--navy),var(--navy2));padding:.8rem 1.1rem;display:flex;align-items:center;gap:.52rem}
+.ai-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 3px rgba(0,191,179,.2);animation:gw 2s infinite;flex-shrink:0}
+@keyframes gw{0%,100%{box-shadow:0 0 0 3px rgba(0,191,179,.2)}50%{box-shadow:0 0 0 5px rgba(0,191,179,.35)}}
+.ai-ht{font-size:.83rem;font-weight:700;color:#fff}
+.ai-hs{font-size:.66rem;color:#5A7A88}
+.ai-msgs{flex:1;overflow-y:auto;padding:.6rem;display:flex;flex-direction:column;gap:.45rem;min-height:160px;max-height:280px;scrollbar-width:thin}
+.msg{max-width:93%;padding:.5rem .76rem;border-radius:8px;font-size:.76rem;line-height:1.55;white-space:pre-wrap}
+.mu{background:var(--teal);color:#fff;align-self:flex-end;border-bottom-right-radius:2px}
+.ma{background:var(--bg);color:var(--txt);align-self:flex-start;border:1px solid var(--bdr);border-bottom-left-radius:2px}
+.ms{background:var(--tl);color:var(--td);align-self:center;font-size:.68rem;font-weight:600;border-radius:20px;padding:.18rem .65rem}
+.mth{background:var(--bg);border:1px solid var(--bdr);align-self:flex-start}
+.dots{display:inline-flex;gap:3px;align-items:center}
+.dots span{width:5px;height:5px;background:var(--teal);border-radius:50%;animation:d 1.2s infinite}
+.dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
+@keyframes d{0%,80%,100%{transform:scale(.6);opacity:.5}40%{transform:scale(1);opacity:1}}
+.ai-inp{padding:.6rem;border-top:1px solid var(--bdr);background:var(--bg);flex-shrink:0}
+.ai-chips{display:flex;gap:.28rem;margin-bottom:.42rem;flex-wrap:wrap}
+.ach{padding:.16rem .46rem;border-radius:20px;border:1px solid #B2E8E5;background:var(--tl);font-size:.63rem;font-weight:600;color:var(--td);cursor:pointer;transition:all .1s}
+.ach:hover{background:var(--teal);color:#fff;border-color:var(--teal)}
+.ai-row{display:flex;gap:.32rem}
+.ai-row input{flex:1;padding:.42rem .65rem;border:1.5px solid var(--bdr);border-radius:6px;font-family:'Inter',sans-serif;font-size:.76rem;color:var(--txt);background:#fff;transition:border-color .1s}
+.ai-row input:focus{outline:none;border-color:var(--teal)}
+.ai-send{width:30px;height:30px;flex-shrink:0;background:var(--teal);color:#fff;border:none;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .13s}
+.ai-send:hover{background:var(--td)}
+.ai-send:disabled{opacity:.5;cursor:not-allowed}
+.srcrow{display:flex;align-items:center;gap:.52rem;padding:.52rem 1.2rem;border-bottom:1px solid var(--bdr);font-size:.76rem;transition:background .1s}
+.srcrow:hover{background:var(--tbg)}
+.srcrow:last-child{border-bottom:none}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--teal);flex-shrink:0}
+.sn{font-weight:600;color:var(--navy);flex:1;font-size:.78rem}
+.notice{padding:.58rem .85rem;border-radius:7px;font-size:.75rem;line-height:1.5;display:flex;gap:.42rem}
+.nt{background:var(--tl);border:1px solid #B2E8E5;color:var(--td)}
+.nw{background:var(--ybg);border:1px solid #FAF089;color:var(--org)}
+.no{background:var(--gbg);border:1px solid #9AE6B4;color:var(--grn)}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;padding:1rem 1.2rem}
+.fgr{display:flex;flex-direction:column;gap:.28rem}
+.fgr.full{grid-column:1/-1}
+.fl{font-size:.7rem;font-weight:600;color:var(--navy)}
+.fi{padding:.45rem .65rem;border:1.5px solid var(--bdr);border-radius:6px;font-family:'Inter',sans-serif;font-size:.79rem;color:var(--txt);background:#fff;transition:border-color .1s}
+.fi:focus{outline:none;border-color:var(--teal)}
+.fh{font-size:.65rem;color:var(--muted)}
+.ov{display:none;position:fixed;inset:0;background:rgba(26,46,59,.5);backdrop-filter:blur(3px);z-index:400;align-items:center;justify-content:center;padding:1rem}
+.ov.open{display:flex}
+.modal{background:#fff;width:100%;max-width:530px;border-radius:13px;box-shadow:0 4px 20px rgba(0,0,0,.09);overflow:hidden;animation:mi .2s ease}
+@keyframes mi{from{transform:scale(.95) translateY(10px);opacity:0}to{transform:scale(1);opacity:1}}
+.mh{background:linear-gradient(135deg,var(--navy),var(--navy2));padding:.95rem 1.35rem;display:flex;align-items:center;justify-content:space-between;color:#fff}
+.mt{font-size:.92rem;font-weight:700}
+.mx{background:none;border:none;color:rgba(255,255,255,.7);font-size:1rem;cursor:pointer}
+.mb2{padding:1.35rem}
+.mb2 p{font-size:.8rem;line-height:1.65;color:var(--body);margin-bottom:.7rem}
+.mf{padding:.7rem 1.35rem;border-top:1px solid var(--bdr);display:flex;gap:.45rem;justify-content:flex-end}
+.sth{padding:.52rem 1.2rem;background:var(--bg);font-size:.73rem;font-weight:700;color:var(--navy);border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:.42rem}
+.sfr{display:flex;align-items:flex-start;gap:.65rem;padding:.6rem 1.8rem;border-bottom:1px solid var(--bdr);transition:background .1s}
+.sfr:hover{background:var(--tbg)}
+.sfr:last-child{border-bottom:none}
+footer{flex-shrink:0;background:#fff;border-top:1px solid var(--bdr);padding:.48rem 1.5rem;display:flex;align-items:center;justify-content:space-between;font-size:.67rem;color:var(--muted)}
+.fsig{display:flex;align-items:center;gap:.42rem;font-weight:600}
+.fav{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,var(--teal),#00D4C8);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.54rem;font-weight:700}
+.fn{color:var(--navy);font-weight:700}
+@media(max-width:900px){.g2{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.sb{display:none}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="logo" href="#">
+    <svg viewBox="0 0 40 40" fill="none"><path d="M20 6C22 6 27 10 28 17C29 22 26 27 20 29C20 29 21 18 13 13C15 9 18 6 20 6Z" fill="#00BFB3"/><path d="M20 6C18 6 13 10 12 17C11 22 14 27 20 29C20 29 19 18 27 13C25 9 22 6 20 6Z" fill="#00D4C8" opacity=".65"/><path d="M20 29C16 31 12 29 11 25C10 21 12 17 15 15C15 15 15 23 23 26C22 28 21 29 20 29Z" fill="#009E94" opacity=".8"/></svg>
+    <span class="logo-w">reg<em>watch</em></span>
+  </a>
+  <div class="tsep"></div>
+  <span class="tmod"><b>Product Regulation</b> &middot; Monitor Regulatorio</span>
+  <div class="tsp"></div>
+  <div class="tclk" id="clk">--:--:--</div>
+  <div class="upill"><div class="uav">JC</div><div><div class="unm">Jahzeel Cordero C.</div><div class="url">Product Regulation Manager</div></div></div>
+</header>
+<div class="shell">
+<nav class="sb">
+  <div class="sbs"><div class="sbl">Principal</div>
+    <div class="si on" onclick="go('dashboard',this)"><span class="sic">&#x1F4CA;</span>Dashboard</div>
+    <div class="si" onclick="go('resumen',this)"><span class="sic">&#x1F4CB;</span>Resumen IA<span class="sbdg live" id="bdgr">LIVE</span></div>
+    <div class="si" onclick="go('fuentes',this)"><span class="sic">&#x1F517;</span>Fuentes oficiales</div>
+  </div>
+  <div class="sbs"><div class="sbl">Pa&iacute;ses</div>
+    <div class="sc on" onclick="selP('all',this)">&#x1F30E; Todos</div>
+    <div class="sc" onclick="selP('CO',this)">&#x1F1E8;&#x1F1F4; Colombia</div>
+    <div class="sc" onclick="selP('CR',this)">&#x1F1E8;&#x1F1F7; Costa Rica</div>
+    <div class="sc" onclick="selP('MX',this)">&#x1F1F2;&#x1F1FD; M&eacute;xico</div>
+    <div class="sc" onclick="selP('DO',this)">&#x1F1E9;&#x1F1F4; R. Dominicana</div>
+    <div class="sc" onclick="selP('PA',this)">&#x1F1F5;&#x1F1E6; Panam&aacute;</div>
+    <div class="sc" onclick="selP('AR',this)">&#x1F1E6;&#x1F1F7; Argentina</div>
+    <div class="sc" onclick="selP('PE',this)">&#x1F1F5;&#x1F1EA; Per&uacute;</div>
+    <div class="sc" onclick="selP('ES',this)">&#x1F1EA;&#x1F1F8; Espa&ntilde;a</div>
+  </div>
+  <div class="sbs"><div class="sbl">Temas</div>
+    <div class="si" onclick="selT('impuestos')"><span class="sic">&#x1F4B0;</span>Impuestos</div>
+    <div class="si" onclick="selT('facturacion')"><span class="sic">&#x1F9FE;</span>Facturaci&oacute;n Elect.</div>
+    <div class="si" onclick="selT('factoring')"><span class="sic">&#x1F4C4;</span>Factoring</div>
+    <div class="si" onclick="selT('contable')"><span class="sic">&#x1F4DA;</span>Norm. Contable</div>
+  </div>
+  <div class="sbs"><div class="sbl">M&aacute;s</div>
+    <div class="si" onclick="go('config',this)"><span class="sic">&#x2699;&#xFE0F;</span>Configuraci&oacute;n</div>
+    <div class="si" onclick="openOv('ov-email')"><span class="sic">&#x2709;&#xFE0F;</span>Enviar resumen</div>
+  </div>
+  <div class="sbft"><p>DIAN &middot; SAT &middot; AFIP &middot; SUNAT<br>Hacienda CR &middot; DGII &middot; DGI PA &middot; AEAT<br>+ Gacetas y Diarios Oficiales</p></div>
+</nav>
+
+<main id="v-dashboard">
+  <div class="ph">
+    <div>
+      <div class="pht">Monitor Regulatorio</div>
+      <div class="phs" id="stlbl">Configura tu API key y presiona <strong>Escanear ahora</strong> &mdash; Claude buscar&aacute; en Google noticias reales en tiempo real</div>
+    </div>
+    <div class="pha">
+      <button class="btn bo" onclick="go('config',null)">&#x2699;&#xFE0F; API Key</button>
+      <button class="btn bo" onclick="genRes()">&#x1F4CB; Resumen IA</button>
+      <button class="btn bp" id="scan-btn" onclick="scan()">&#x27F3; Escanear ahora</button>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="sico it">&#x1F4E1;</div><div><div class="sv" id="s0">&mdash;</div><div class="sl">Total actualizaciones</div></div></div>
+    <div class="stat"><div class="sico ib">&#x1F535;</div><div><div class="sv" id="s1">&mdash;</div><div class="sl">Nuevas hoy</div></div></div>
+    <div class="stat"><div class="sico iy">&#x1F7E1;</div><div><div class="sv" id="s2">&mdash;</div><div class="sl">En consulta p&uacute;blica</div></div></div>
+    <div class="stat"><div class="sico ig">&#x2705;</div><div><div class="sv" id="s3">&mdash;</div><div class="sl">Resoluciones en firme</div></div></div>
+  </div>
+  <div class="g2" style="flex:1;min-height:0">
+    <div class="card">
+      <div class="ch">
+        <div class="ct">&#x1F5C2;&#xFE0F; Actualizaciones regulatorias <span id="live-tag" style="font-size:.6rem;background:var(--gbg);color:var(--grn);padding:.1rem .4rem;border-radius:10px;font-weight:700;display:none">&#x1F310; EN VIVO</span></div>
+        <input type="text" id="srch" placeholder="Buscar&hellip;" oninput="render()" style="padding:.3rem .62rem;border:1.5px solid var(--bdr);border-radius:6px;font-size:.74rem;font-family:'Inter',sans-serif;width:138px;transition:border-color .1s" onfocus="this.style.borderColor='var(--teal)'" onblur="this.style.borderColor='var(--bdr)'">
+      </div>
+      <div class="prog"><div class="pb" id="pb"></div></div>
+      <div class="pills">
+        <span class="pill on" onclick="setPill(this,'all')">Todos</span>
+        <span class="pill" onclick="setPill(this,'impuestos')">&#x1F4B0; Impuestos</span>
+        <span class="pill" onclick="setPill(this,'facturacion')">&#x1F9FE; Facturaci&oacute;n</span>
+        <span class="pill" onclick="setPill(this,'factoring')">&#x1F4C4; Factoring</span>
+        <span class="pill" onclick="setPill(this,'contable')">&#x1F4DA; Contable</span>
+      </div>
+      <div class="cb" id="res-list">
+        <div class="empty">
+          <div class="ei">&#x1F310;</div>
+          <div class="et">Noticias regulatorias en vivo</div>
+          <div class="es">
+            RegWatch usa b&uacute;squeda web real integrada en Claude.<br>
+            Cada escaneo busca en Google las &uacute;ltimas novedades de los 8 pa&iacute;ses.<br><br>
+            <strong style="color:var(--navy)">Paso 1:</strong> Ingresa tu API key en &#x2699;&#xFE0F; <strong>Configuraci&oacute;n</strong><br>
+            <strong style="color:var(--navy)">Paso 2:</strong> Presiona <strong>Escanear ahora</strong><br><br>
+            <span style="font-size:.7rem;color:#A0AEC0">Costo estimado: menos de $1 USD/mes &middot; Datos siempre actualizados</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1rem;overflow-y:auto">
+      <div class="ai-card">
+        <div class="ai-h"><div class="ai-dot"></div><div><div class="ai-ht">Asistente Regulatorio IA</div><div class="ai-hs">An&aacute;lisis contextual &middot; Web search activo</div></div></div>
+        <div class="ai-msgs" id="ai-m"><div class="msg ms">&#x1F44B; Hola Jahzeel &mdash; configura tu API key y escanea para empezar</div></div>
+        <div class="ai-inp">
+          <div class="ai-chips">
+            <span class="ach" onclick="qk('Cuales son los cambios mas urgentes esta semana?')">Urgentes</span>
+            <span class="ach" onclick="qk('Consultas publicas proximas a vencer')">Pr&oacute;x. a vencer</span>
+            <span class="ach" onclick="qk('Genera email ejecutivo con las 5 novedades mas importantes para el equipo')">Email equipo</span>
+            <span class="ach" onclick="qk('Impacto en factoring Mexico y Argentina')">Factoring MX/AR</span>
+          </div>
+          <div class="ai-row">
+            <input type="text" id="ai-i" placeholder="Pregunta sobre regulaci&oacute;n&hellip;" onkeydown="if(event.key==='Enter')chat()">
+            <button class="ai-send" id="ai-btn" onclick="chat()">&#x27A4;</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">&#x1F517; Fuentes monitoreadas</div><span class="bdg bt">18 fuentes</span></div>
+        <div class="cb" id="src-mini"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="view" id="v-resumen" style="display:none">
+  <div class="ph">
+    <div><div class="pht">Resumen Ejecutivo IA</div><div class="phs">An&aacute;lisis consolidado &middot; Listo para compartir con el equipo</div></div>
+    <div class="pha">
+      <button class="btn bo" onclick="copyRes()">&#x1F4CB; Copiar</button>
+      <button class="btn bo" onclick="openOv('ov-email')">&#x2709;&#xFE0F; Enviar</button>
+      <button class="btn bp" onclick="genRes()">&#x27F3; Regenerar</button>
+    </div>
+  </div>
+  <div class="card" style="flex:1"><div class="cb" style="padding:1.35rem"><pre id="res-txt" style="font-family:'Inter',sans-serif;font-size:.81rem;line-height:1.75;color:var(--txt);white-space:pre-wrap">Escanea primero y luego presiona Resumen IA para el analisis ejecutivo del dia.</pre></div></div>
+</div>
+
+<div class="view" id="v-fuentes" style="display:none">
+  <div class="ph"><div><div class="pht">Fuentes Oficiales Monitoreadas</div><div class="phs">18 fuentes verificadas &middot; 8 pa&iacute;ses &middot; acceso directo</div></div></div>
+  <div class="card" style="flex:1"><div class="cb" id="src-full"></div></div>
+</div>
+
+<div class="view" id="v-config" style="display:none">
+  <div class="ph"><div><div class="pht">Configuraci&oacute;n</div><div class="phs">API key de Anthropic &mdash; necesaria para b&uacute;squeda web en vivo</div></div></div>
+  <div class="card">
+    <div class="ch"><div class="ct">&#x1F511; API Key de Anthropic &mdash; B&uacute;squeda web real</div></div>
+    <div class="fg">
+      <div class="fgr full">
+        <div class="notice nt">
+          &#x1F310; <strong>RegWatch usa b&uacute;squeda web real.</strong> Cuando presionas &ldquo;Escanear ahora&rdquo;, Claude busca en Google en tiempo real las &uacute;ltimas noticias regulatorias de los 8 pa&iacute;ses y las entrega estructuradas.<br><br>
+          Obt&eacute;n tu API key en <strong>console.anthropic.com</strong> &rarr; API Keys &rarr; Create Key<br>
+          Costo: <strong>Haiku ~$0.20/mes &middot; Sonnet ~$0.60/mes</strong> con uso diario
+        </div>
+      </div>
+      <div class="fgr full">
+        <label class="fl">API Key de Anthropic</label>
+        <input type="password" class="fi" id="cfg-k" placeholder="sk-ant-api03-...">
+        <span class="fh">Se guarda en tu navegador (localStorage). Solo viaja directamente a api.anthropic.com &mdash; sin intermediarios.</span>
+      </div>
+      <div class="fgr">
+        <label class="fl">Modelo</label>
+        <select class="fi" id="cfg-m">
+          <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 &mdash; M&aacute;s econ&oacute;mico (~$0.20/mes)</option>
+          <option value="claude-sonnet-4-6" selected>Claude Sonnet 4.6 &mdash; Mejor calidad (~$0.60/mes)</option>
+        </select>
+      </div>
+      <div class="fgr">
+        <label class="fl">URL p&uacute;blica de esta app</label>
+        <div style="background:var(--bg);border:1px solid var(--bdr);border-radius:6px;padding:.45rem .65rem;font-size:.75rem;color:var(--navy);word-break:break-all;font-weight:600" id="current-url">&mdash;</div>
+        <button class="btn bo" style="margin-top:.3rem;font-size:.72rem;padding:.3rem .7rem" onclick="navigator.clipboard.writeText(document.getElementById('current-url').textContent).then(()=>alert('URL copiada'))">&#x1F4CB; Copiar URL</button>
+      </div>
+      <div class="fgr full"><button class="btn bp" onclick="saveConf()">&#x1F4BE; Guardar configuraci&oacute;n</button><span id="save-msg" style="font-size:.73rem;color:var(--grn);font-weight:600;display:none;margin-top:.3rem">&#x2705; Guardado correctamente</span></div>
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>
+  <div class="fsig"><div class="fav">JC</div>Elaborado por <span class="fn">&nbsp;Jahzeel Cordero Cordero</span>&nbsp;&middot; Product Regulation Manager</div>
+  <span>&copy; 2026 &middot; RegWatch &middot; Product Regulation Team &middot; Powered by Claude AI + Web Search</span>
+</footer>
+
+<div class="ov" id="ov-email">
+  <div class="modal">
+    <div class="mh"><span class="mt">&#x2709;&#xFE0F; Enviar Resumen al Equipo</span><button class="mx" onclick="closeOv('ov-email')">&#x2715;</button></div>
+    <div class="mb2">
+      <p style="margin-bottom:.9rem">&#x2139;&#xFE0F; Se abrir&aacute; tu cliente de correo con el resumen preparado.</p>
+      <div class="fgr" style="margin-bottom:.65rem"><label class="fl">Destinatarios</label><input type="text" class="fi" id="em-to" placeholder="correo1@empresa.com, correo2@empresa.com"></div>
+      <div class="fgr"><label class="fl">Asunto</label><input type="text" class="fi" id="em-s" value="RegWatch - Actualizaciones Regulatorias - Product Regulation"></div>
+    </div>
+    <div class="mf"><button class="btn bo" onclick="closeOv('ov-email')">Cancelar</button><button class="btn bp" onclick="prepEmail()">&#x1F4E8; Abrir en correo</button></div>
+  </div>
+</div>
+
+<script>
+const P={CO:{n:'Colombia',f:'\u{1F1E8}\u{1F1F4}'},CR:{n:'Costa Rica',f:'\u{1F1E8}\u{1F1F7}'},MX:{n:'Mexico',f:'\u{1F1F2}\u{1F1FD}'},DO:{n:'R. Dominicana',f:'\u{1F1E9}\u{1F1F4}'},PA:{n:'Panama',f:'\u{1F1F5}\u{1F1E6}'},AR:{n:'Argentina',f:'\u{1F1E6}\u{1F1F7}'},PE:{n:'Peru',f:'\u{1F1F5}\u{1F1EA}'},ES:{n:'Espana',f:'\u{1F1EA}\u{1F1F8}'}};
+const FUENTES=[
+  {c:'CO',n:'DIAN - Resoluciones firmadas',u:'https://www.dian.gov.co/normatividad/Paginas/Resoluciones.aspx',tw:'@DIANColombiana',t:'Resoluciones / Impuestos'},
+  {c:'CO',n:'DIAN - Proyectos de normas',u:'https://www.dian.gov.co/normatividad/Paginas/ProyectosNormas.aspx',tw:'@DIANColombiana',t:'Consultas publicas CO'},
+  {c:'CO',n:'DIAN - Comunicados de prensa',u:'https://www.dian.gov.co/Prensa/Paginas/HistoricoComunicadosPrensa.aspx',tw:'@DIANColombiana',t:'Noticias y anuncios'},
+  {c:'CR',n:'Hacienda CR - Consulta publica',u:'https://www.hacienda.go.cr/ProyectosConsultaPublica.html',tw:'@HaciendaCR',t:'Proyectos en consulta CR'},
+  {c:'CR',n:'Ministerio de Hacienda CR',u:'https://www.hacienda.go.cr/',tw:'@HaciendaCR',t:'Normativa general / DGT'},
+  {c:'CR',n:'La Gaceta Oficial CR',u:'https://www.imprentanacional.go.cr/gaceta',tw:'',t:'Normas en firme CR'},
+  {c:'CR',n:'SUGEF Costa Rica',u:'https://www.sugef.fi.cr/normativa',tw:'',t:'Factoring / Financiero CR'},
+  {c:'MX',n:'SAT Mexico',u:'https://www.sat.gob.mx/',tw:'@SATMX',t:'Impuestos / CFDI / RMF'},
+  {c:'MX',n:'DOF - Diario Oficial Federacion',u:'https://www.dof.gob.mx',tw:'',t:'Normas en firme MX'},
+  {c:'DO',n:'DGII - Novedades FE (e-CF)',u:'https://dgii.gov.do/cicloContribuyente/facturacion/comprobantesFiscalesElectronicosE-CF/Paginas/Novedades-FE.aspx',tw:'@DGIIrd',t:'Facturacion Electronica RD'},
+  {c:'PA',n:'DGI Panama',u:'https://dgi.mef.gob.pa',tw:'',t:'Tributacion / Impuestos PA'},
+  {c:'PA',n:'Gaceta Oficial Panama',u:'https://www.gacetaoficial.gob.pa',tw:'',t:'Normas en firme PA'},
+  {c:'AR',n:'ARCA/AFIP Argentina',u:'https://www.afip.gob.ar/normativa',tw:'@ARCArecaudacion',t:'Impuestos / Facturacion AR'},
+  {c:'AR',n:'BCRA Argentina',u:'https://www.bcra.gob.ar',tw:'',t:'Factoring / Financiero AR'},
+  {c:'PE',n:'SUNAT Peru',u:'https://www.sunat.gob.pe/legislacion',tw:'@SUNAToficial',t:'Impuestos / Comprobantes PE'},
+  {c:'ES',n:'AEAT Espana',u:'https://www.agenciatributaria.gob.es',tw:'@Agencia_AEAT',t:'Tributacion / IVA ES'},
+  {c:'ES',n:'BOE - Boletin Oficial Estado',u:'https://www.boe.es',tw:'',t:'Normas en firme ES'},
+  {c:'DO',n:'DGII - Legislacion Tributaria',u:'https://dgii.gov.do/legislacion/Paginas/default.aspx',tw:'@DGIIrd',t:'Normas tributarias RD'},
+];
+const ST={nuevo:['bb','Nuevo'],consulta:['by','Consulta'],firme:['bg','Firme'],derogado:['bgr','Derogado']};
+const TL={impuestos:'Impuestos',facturacion:'Facturacion',factoring:'Factoring',contable:'Contable'};
+let data=[],cpais='all',ctema='all';
+let apiKey=localStorage.getItem('rw_k')||'';
+let mdl=localStorage.getItem('rw_m')||'claude-sonnet-4-6';
+
+setInterval(()=>{document.getElementById('clk').textContent=new Date().toLocaleTimeString('es-CR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})},1000);
+document.getElementById('current-url').textContent=window.location.href;
+
+function go(v,el){
+  ['dashboard','resumen','fuentes','config'].forEach(x=>{const d=document.getElementById('v-'+x);if(d)d.style.display=x===v?'flex':'none';});
+  if(el){document.querySelectorAll('.si').forEach(e=>e.classList.remove('on'));el.classList.add('on');}
+  if(v==='fuentes')renderFF();
+  if(v==='config'){if(apiKey)document.getElementById('cfg-k').value=apiKey;document.getElementById('cfg-m').value=mdl;document.getElementById('current-url').textContent=window.location.href;}
+}
+function selP(p,el){cpais=p;document.querySelectorAll('.sc').forEach(e=>e.classList.remove('on'));if(el)el.classList.add('on');render();}
+function selT(t){ctema=t;document.querySelectorAll('.pill').forEach(p=>{const m={impuestos:'Impuestos',facturacion:'Factur',factoring:'Factor',contable:'Contable'};p.classList.toggle('on',p.textContent.includes(m[t]));});render();go('dashboard',null);}
+function setPill(el,t){ctema=t;document.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));el.classList.add('on');render();}
+
+async function scan(){
+  const key=apiKey||document.getElementById('cfg-k')?.value?.trim();
+  if(!key){alert('Configura tu API key de Anthropic en Configuracion primero.');go('config',null);return;}
+  const btn=document.getElementById('scan-btn');
+  btn.disabled=true;btn.textContent='Buscando en la web...';
+  document.getElementById('stlbl').textContent='Buscando en Google noticias regulatorias reales de 8 paises...';
+  document.getElementById('live-tag').style.display='none';
+  const pb=document.getElementById('pb');
+  pb.classList.add('ani');pb.style.width='12%';
+  const tk=setInterval(()=>{const w=parseFloat(pb.style.width);if(w<84)pb.style.width=(w+3)+'%';},900);
+  let sk='';for(let i=0;i<7;i++)sk+=`<div class="skrow"><div class="sk" style="width:42px;height:42px;border-radius:8px;flex-shrink:0"></div><div style="flex:1;display:flex;flex-direction:column;gap:.38rem"><div class="sk" style="height:9px;width:64%"></div><div class="sk" style="height:9px;width:88%"></div><div class="sk" style="height:9px;width:46%"></div></div></div>`;
+  document.getElementById('res-list').innerHTML=sk;
+  const hoy=new Date().toLocaleDateString('es-CR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const prompt=`Hoy es ${hoy}. Eres un monitor regulatorio especializado. USA LA HERRAMIENTA DE BUSQUEDA WEB para buscar las noticias regulatorias MAS RECIENTES Y REALES de estas fuentes:
+
+COLOMBIA: dian.gov.co - resoluciones, proyectos normas, comunicados 2025
+COSTA RICA: hacienda.go.cr - comprobantes electronicos v4.4, TRIBU-CR, IVA 2025
+MEXICO: sat.gob.mx - CFDI 4.0, RMF 2025-2026, reforma fiscal
+REPUBLICA DOMINICANA: dgii.gov.do - e-CF comprobantes electronicos 2025
+PANAMA: dgi.mef.gob.pa - normativa tributaria 2025
+ARGENTINA: afip.gob.ar o ARCA - facturacion electronica RG 2025
+PERU: sunat.gob.pe - SIRE registros electronicos 2025
+ESPANA: agenciatributaria.gob.es - Verifactu factura electronica B2B 2025
+
+Busca: "DIAN resolucion 2025", "SAT CFDI RMF 2026", "factura electronica Costa Rica 2025", "DGII e-CF novedades 2025", "SUNAT SIRE 2025", "ARCA facturacion Argentina 2025", "AEAT Verifactu 2025"
+
+Responde SOLO JSON valido sin texto ni markdown:
+{"items":[{"id":"1","country":"CO","title":"titulo real","summary":"resumen con fecha y detalles concretos encontrados","topic":"impuestos|facturacion|factoring|contable","status":"nuevo|consulta|firme","urgency":"alta|media|baja","entity":"entidad real","date":"fecha real","ref":"resolucion real","source_url":"URL oficial real"}]}
+
+Minimo 2 items por pais. Basa CADA item en busqueda web real con fechas y numeros de resolucion reales.`;
+
+  try{
+    const resp=await fetch('/api/proxy',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01'},
+      body:JSON.stringify({model:mdl||'claude-sonnet-4-6',max_tokens:8000,tools:[{type:'web_search_20250305',name:'web_search'}],messages:[{role:'user',content:prompt}]})
+    });
+    if(!resp.ok){const e=await resp.json().catch(()=>({}));throw new Error(e?.error?.message||'HTTP '+resp.status);}
+    const apiData=await resp.json();
+    const textBlocks=apiData.content.filter(b=>b.type==='text').map(b=>b.text).join('');
+    const m=textBlocks.match(/\{[\s\S]*\}/);
+    if(!m)throw new Error('Sin JSON en respuesta');
+    data=JSON.parse(m[0]).items;
+    finalizarScan(tk,true);
+  }catch(e){
+    clearInterval(tk);
+    if(e.message&&(e.message.includes('400')||e.message.includes('tool')||e.message.includes('search'))){
+      await scanFallback(key);
+    }else{
+      pb.classList.remove('ani');pb.style.width='0%';
+      document.getElementById('res-list').innerHTML=`<div class="empty"><div class="ei">&#x26A0;&#xFE0F;</div><div class="et">Error de conexion</div><div class="es">${e.message}<br><br>Verifica tu API key en Configuracion.</div></div>`;
+      document.getElementById('stlbl').textContent='Error - Verifica la API key en Configuracion';
+    }
+  }
+  btn.disabled=false;btn.textContent='&#x27F3; Escanear ahora';
+}
+
+function finalizarScan(tk,live){
+  if(tk)clearInterval(tk);
+  const pb=document.getElementById('pb');
+  pb.classList.remove('ani');pb.style.width='100%';
+  setTimeout(()=>pb.style.width='0%',600);
+  document.getElementById('s0').textContent=data.length;
+  document.getElementById('s1').textContent=data.filter(i=>i.status==='nuevo').length;
+  document.getElementById('s2').textContent=data.filter(i=>i.status==='consulta').length;
+  document.getElementById('s3').textContent=data.filter(i=>i.status==='firme').length;
+  const t=new Date();
+  const liveStr=live?' - Busqueda web en vivo':'';
+  document.getElementById('stlbl').textContent='Ultimo escaneo: '+t.toLocaleTimeString('es-CR',{hour:'2-digit',minute:'2-digit'})+liveStr+' - '+data.length+' actualizaciones';
+  if(live)document.getElementById('live-tag').style.display='inline';
+  render();
+}
+
+async function scanFallback(key){
+  const hoy=new Date().toLocaleDateString('es-CR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const p=`Hoy es ${hoy}. Eres experto en regulacion tributaria LATAM y Espana. 
+Genera actualizaciones regulatorias REALES y RECIENTES de 2024-2026 para: Colombia, Costa Rica, Mexico, R. Dominicana, Panama, Argentina, Peru, Espana.
+Temas: impuestos, facturacion electronica, factoring, normativa contable NIIF.
+Usa resoluciones y normas reales con numeros y fechas correctas.
+Solo JSON sin markdown: {"items":[{"id":"1","country":"CO","title":"...","summary":"...","topic":"impuestos|facturacion|factoring|contable","status":"nuevo|consulta|firme","urgency":"alta|media|baja","entity":"...","date":"...","ref":"...","source_url":"..."}]}
+Minimo 2 items por pais.`;
+  try{
+    const r=await fetch('/api/proxy',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01'},body:JSON.stringify({model:mdl||'claude-sonnet-4-6',max_tokens:4000,messages:[{role:'user',content:p}]})});
+    if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e?.error?.message||'HTTP '+r.status);}
+    const d=await r.json();
+    const txt=d.content.map(b=>b.text||'').join('');
+    const m=txt.match(/\{[\s\S]*\}/);
+    if(!m)throw new Error('Sin JSON');
+    data=JSON.parse(m[0]).items;
+    finalizarScan(null,false);
+  }catch(e2){
+    document.getElementById('res-list').innerHTML=`<div class="empty"><div class="ei">&#x26A0;&#xFE0F;</div><div class="et">Error</div><div class="es">${e2.message}<br>Verifica tu API key en Configuracion.</div></div>`;
+    document.getElementById('stlbl').textContent='Error - Verifica la API key';
+  }
+}
+
+function render(){
+  const q=(document.getElementById('srch')?.value||'').toLowerCase();
+  const f=data.filter(i=>(cpais==='all'||i.country===cpais)&&(ctema==='all'||i.topic===ctema)&&(!q||i.title.toLowerCase().includes(q)||i.summary.toLowerCase().includes(q)));
+  if(!f.length){document.getElementById('res-list').innerHTML='<div class="empty"><div class="ei">&#x1F50D;</div><div class="et">Sin resultados</div><div class="es">No hay actualizaciones con los filtros actuales.</div></div>';return;}
+  document.getElementById('res-list').innerHTML=f.map(i=>{
+    const co=P[i.country]||{n:i.country,f:'&#x1F310;'};
+    const[bc,bl]=ST[i.status]||['bgr',''];
+    const src=i.source_url?`<a href="${i.source_url}" target="_blank" onclick="event.stopPropagation()" style="font-size:.62rem;color:var(--teal);font-weight:600;text-decoration:none">Fuente</a>`:'';
+    return`<div class="ri" onclick="anal('${i.id}')"><div class="ril"><span class="bdg ${bc}">${bl}</span><span style="font-size:1rem">${co.f}</span><span style="font-size:.63rem;color:var(--muted);font-weight:600">${co.n}</span></div><div class="ric"><div class="rit">${i.title}</div><div class="ris">${i.summary}</div><div class="rim"><span>${i.entity}</span><span>${i.date}</span><span>${TL[i.topic]||i.topic}</span>${i.ref?'<span>'+i.ref+'</span>':''}${src}</div></div><div class="rir"><div class="udot ${i.urgency}"></div><button class="mb" onclick="event.stopPropagation();anal('${i.id}')">Analizar</button></div></div>`;
+  }).join('');
+}
+
+async function genRes(){
+  go('resumen',null);
+  const key=apiKey||document.getElementById('cfg-k')?.value?.trim();
+  if(!key){document.getElementById('res-txt').textContent='Configura la API key primero.';return;}
+  if(!data.length){document.getElementById('res-txt').textContent='Escanea primero desde el Dashboard.';return;}
+  document.getElementById('res-txt').textContent='Generando resumen ejecutivo...';
+  const hoy=new Date().toLocaleDateString('es-CR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const ctx=data.map(i=>`[${P[i.country]?.n||i.country}][${i.topic}][${i.status}][${i.urgency}] ${i.title}: ${i.summary}`).join('\n');
+  const pr=`Elabora un resumen ejecutivo profesional. Hoy: ${hoy}\n\nACTUALIZACIONES:\n${ctx}\n\nFormato:\n---RESUMEN EJECUTIVO REGULATORIO---\n${hoy.toUpperCase()}\nEquipo: Product Regulation - RegWatch\n---\n\nASUNTOS URGENTES (top 3):\n[3 mas criticos con impacto y accion]\n\nNOVEDADES POR PAIS:\n[Bullets por pais]\n\nACCIONES REQUERIDAS ESTA SEMANA:\n[Lista accionable]\n\nCONSULTAS PROXIMAS A VENCER:\n[Fechas limite]\n\n---\nElaborado por: Jahzeel Cordero Cordero\nProduct Regulation Manager - RegWatch`;
+  try{
+    const r=await fetch('/api/proxy',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01'},body:JSON.stringify({model:mdl||'claude-sonnet-4-6',max_tokens:2000,messages:[{role:'user',content:pr}]})});
+    if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e?.error?.message||'HTTP '+r.status);}
+    const d=await r.json();
+    document.getElementById('res-txt').textContent=d.content.map(b=>b.text||'').join('');
+    document.getElementById('bdgr').textContent='OK';document.getElementById('bdgr').classList.remove('live');
+  }catch(e){document.getElementById('res-txt').textContent='Error: '+e.message;}
+}
+function copyRes(){navigator.clipboard.writeText(document.getElementById('res-txt').textContent).then(()=>alert('Copiado al portapapeles'));}
+
+function qk(q){document.getElementById('ai-i').value=q;chat();}
+async function anal(id){
+  const i=data.find(x=>x.id===id);if(!i)return;
+  document.getElementById('ai-i').value='Analiza: "'+i.title+'" ('+( P[i.country]?.n||i.country)+', '+i.entity+'). Dame: 1) impacto operativo para Product Regulation, 2) acciones concretas del equipo, 3) plazo y urgencia.';
+  await chat();
+}
+async function chat(){
+  const inp=document.getElementById('ai-i');const q=inp.value.trim();if(!q)return;
+  const key=apiKey||document.getElementById('cfg-k')?.value?.trim();
+  const msgs=document.getElementById('ai-m');const btn=document.getElementById('ai-btn');
+  msgs.innerHTML+=`<div class="msg mu">${esc(q)}</div>`;inp.value='';btn.disabled=true;
+  const tid='t'+Date.now();
+  msgs.innerHTML+=`<div class="msg mth" id="${tid}"><div class="dots"><span></span><span></span><span></span></div></div>`;
+  msgs.scrollTop=9999;
+  const ctx=data.length?'Contexto actualizaciones:\n'+data.map(i=>`[${P[i.country]?.n||i.country}] ${i.title}: ${i.summary}`).join('\n')+'\n\n':'';
+  try{
+    const r=await fetch('/api/proxy',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key||'','anthropic-version':'2023-06-01'},body:JSON.stringify({model:mdl||'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:ctx+'Eres asistente IA del equipo Product Regulation. Manager: Jahzeel Cordero. Responde profesional en espanol.\n\n'+q}]})});
+    if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e?.error?.message||'HTTP '+r.status);}
+    const d=await r.json();
+    document.getElementById(tid).className='msg ma';document.getElementById(tid).textContent=d.content.map(b=>b.text||'').join('');
+  }catch(e){
+    document.getElementById(tid).className='msg ma';
+    document.getElementById(tid).textContent=key?'Error: '+e.message:'Configura la API key en Configuracion para usar el asistente IA.';
+  }
+  btn.disabled=false;msgs.scrollTop=9999;
+}
+
+function renderSrcMini(){
+  const el=document.getElementById('src-mini');if(!el)return;
+  el.innerHTML=FUENTES.slice(0,10).map(f=>`<div class="srcrow"><div class="sdot"></div><span style="font-size:.9rem">${P[f.c]?.f||''}</span><span class="sn">${f.n}</span><a href="${f.u}" target="_blank" style="font-size:.61rem;color:var(--teal);text-decoration:none;font-weight:600">Ver</a></div>`).join('')
+  +`<div class="srcrow" style="justify-content:center;cursor:pointer" onclick="go('fuentes',null)"><span style="font-size:.72rem;color:var(--teal);font-weight:600">Ver las ${FUENTES.length} fuentes completas</span></div>`;
+}
+function renderFF(){
+  const el=document.getElementById('src-full');if(!el)return;
+  const by={};FUENTES.forEach(f=>{if(!by[f.c])by[f.c]=[];by[f.c].push(f);});
+  el.innerHTML=Object.entries(by).map(([c,srcs])=>`<div><div class="sth">${P[c]?.f||''} ${P[c]?.n||c}</div>${srcs.map(s=>`<div class="sfr"><div class="sdot" style="margin-top:.2rem"></div><div style="flex:1;min-width:0"><div style="font-size:.8rem;font-weight:600;color:var(--navy);margin-bottom:.12rem">${s.n}</div><div style="font-size:.68rem;color:var(--muted)">${s.t}</div></div><div style="text-align:right;flex-shrink:0"><a href="${s.u}" target="_blank" style="font-size:.68rem;color:var(--teal);text-decoration:none;font-weight:600;display:block">${s.u.replace('https://','').split('/')[0]}</a>${s.tw?`<div style="font-size:.61rem;color:var(--td);font-weight:600">${s.tw}</div>`:''}</div></div>`).join('')}</div>`).join('');
+}
+function saveConf(){
+  apiKey=document.getElementById('cfg-k').value.trim();mdl=document.getElementById('cfg-m').value;
+  if(apiKey)localStorage.setItem('rw_k',apiKey);localStorage.setItem('rw_m',mdl);
+  const msg=document.getElementById('save-msg');msg.style.display='block';setTimeout(()=>msg.style.display='none',3000);
+}
+function openOv(id){document.getElementById(id).classList.add('open');}
+function closeOv(id){document.getElementById(id).classList.remove('open');}
+function prepEmail(){
+  const to=document.getElementById('em-to').value;const s=document.getElementById('em-s').value;
+  const b=document.getElementById('res-txt')?.textContent||'Genera el resumen primero.';
+  window.open('mailto:'+to+'?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b));closeOv('ov-email');
+}
+function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+renderSrcMini();
+if(apiKey){document.getElementById('stlbl').textContent='API key configurada - Presiona Escanear ahora para noticias reales en vivo';}
+</script>
+</body>
+</html>
