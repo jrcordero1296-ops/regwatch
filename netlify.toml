@@ -1,5 +1,9 @@
 [functions]
 directory = "netlify/functions"
+node_bundler = "esbuild"
+
+[functions."proxy"]
+timeout = 26
 
 [[redirects]]
   from = "/api/*"
